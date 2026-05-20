@@ -1,0 +1,219 @@
+@page {
+  size: A4;
+  margin: 2cm 2.2cm;
+  @bottom-center {
+    content: "第 " counter(page) " 页 / 共 " counter(pages) " 页";
+    font-size: 9px;
+    color: #667085;
+  }
+}
+@page :first {
+  margin-top: 0;
+  @bottom-center { content: none; }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: #1f2933;
+  font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+  font-size: 11pt;
+  line-height: 1.6;
+}
+/* 封面 */
+.cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  page-break-after: always;
+}
+.cover h1 {
+  font-size: 28pt;
+  color: #0f766e;
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+}
+.cover .subtitle {
+  font-size: 16pt;
+  color: #667085;
+  margin: 0 0 24px;
+}
+.cover .period {
+  font-size: 14pt;
+  color: #1f2933;
+  margin: 0 0 8px;
+}
+.cover .date {
+  font-size: 11pt;
+  color: #667085;
+  margin: 0 0 40px;
+}
+.cover .confidential {
+  font-size: 9pt;
+  color: #9ca3af;
+  border-top: 1px solid #d9dee7;
+  padding-top: 16px;
+  margin-top: auto;
+}
+/* 板块 */
+.section {
+  page-break-before: always;
+}
+.section:first-of-type {
+  page-break-before: auto;
+}
+h2 {
+  font-size: 16pt;
+  color: #0f766e;
+  border-bottom: 2px solid #0f766e;
+  padding-bottom: 6px;
+  margin: 0 0 16px;
+}
+h3 {
+  font-size: 12pt;
+  color: #1f2933;
+  margin: 16px 0 8px;
+}
+/* KPI 卡片 */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+.kpi-card {
+  background: #f6f7f8;
+  border-radius: 8px;
+  padding: 14px 16px;
+  border-left: 4px solid #0f766e;
+}
+.kpi-card.warning { border-left-color: #f59e0b; }
+.kpi-card.danger { border-left-color: #dc2626; }
+.kpi-card .label {
+  font-size: 9pt;
+  color: #667085;
+  margin: 0 0 4px;
+}
+.kpi-card .value {
+  font-size: 16pt;
+  font-weight: 700;
+  color: #1f2933;
+  margin: 0;
+}
+.kpi-card .change {
+  font-size: 9pt;
+  margin: 4px 0 0;
+}
+.kpi-card .change.up { color: #16a34a; }
+.kpi-card .change.down { color: #dc2626; }
+/* 发现列表 */
+.findings ol {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+.findings li {
+  margin: 6px 0;
+  color: #1f2933;
+}
+/* 图表 */
+.chart-container {
+  margin: 16px 0;
+  text-align: center;
+  page-break-inside: avoid;
+}
+.chart-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.chart-title {
+  font-size: 10pt;
+  color: #667085;
+  margin: 4px 0 0;
+  text-align: center;
+}
+/* 表格 */
+.kpi-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 10pt;
+}
+.kpi-table th {
+  background: #eef6f4;
+  color: #1f2933;
+  font-weight: 700;
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid #d9dee7;
+}
+.kpi-table td {
+  padding: 6px 10px;
+  border: 1px solid #d9dee7;
+}
+.kpi-table tr:nth-child(even) { background: #f9fafb; }
+.kpi-table .number { text-align: right; font-variant-numeric: tabular-nums; }
+.kpi-table .positive { color: #16a34a; }
+.kpi-table .negative { color: #dc2626; }
+/* 风险预警 */
+.alert-list { margin: 12px 0; }
+.alert-item {
+  padding: 10px 14px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border-left: 4px solid;
+}
+.alert-item.warning {
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+.alert-item.critical {
+  background: #fef2f2;
+  border-color: #dc2626;
+}
+.alert-item.info {
+  background: #f0fdfa;
+  border-color: #0f766e;
+}
+.alert-item .alert-title {
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.alert-item .alert-detail {
+  font-size: 10pt;
+  color: #667085;
+  margin: 0;
+}
+/* 建议 */
+.recommendations { margin: 12px 0; }
+.recommendations .rec-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+.recommendations .priority {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 9pt;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.recommendations .priority.high { background: #fef2f2; color: #dc2626; }
+.recommendations .priority.medium { background: #fffbeb; color: #d97706; }
+.recommendations .priority.low { background: #f0fdfa; color: #0f766e; }
+/* 下钻明细表 */
+.drilldown-title {
+  font-size: 10pt;
+  color: #667085;
+  margin: 12px 0 6px;
+  font-weight: 700;
+}
+/* 打印优化 */
+@media print {
+  .section { page-break-before: always; }
+  .chart-container { page-break-inside: avoid; }
+  .kpi-grid { page-break-inside: avoid; }
+}

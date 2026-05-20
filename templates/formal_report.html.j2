@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>经营分析月报 - {{ month }}</title>
+  <style>{{ css_content }}</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<header class="cover">
+  <h1>经营分析月报</h1>
+  <p class="subtitle">{{ profile_info.get("name", "Finance AI OS 自动生成") }}</p>
+  <p class="period">{{ month_label }}</p>
+  <p class="date">生成日期：{{ gen_date }}</p>
+  <p class="confidential">本报告包含经营数据，仅供内部管理层参阅</p>
+</header>
+
+{% if "summary" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.summary }}、管理层摘要</h2>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <p class="label">销售收入</p>
+      <p class="value">{{ "{:,.0f}".format(kpis.get("销售收入", 0)) }}千</p>
+      {% if kpi_changes.revenue_pct is not none %}
+      <p class="change {{ 'up' if kpi_changes.revenue_pct > 0 else 'down' }}">
+        环比 {{ "%+.1f"|format(kpi_changes.revenue_pct) }}%
+      </p>
+      {% endif %}
+    </div>
+    <div class="kpi-card {{ 'warning' if kpis.get("毛利率", 0) < 20 else '' }}">
+      <p class="label">毛利率</p>
+      <p class="value">{{ "%.2f"|format(kpis.get("毛利率", 0)) }}%</p>
+      {% if kpi_changes.margin_change is not none %}
+      <p class="change {{ 'up' if kpi_changes.margin_change > 0 else 'down' }}">
+        环比 {{ "%+.2f"|format(kpi_changes.margin_change) }}pp
+      </p>
+      {% endif %}
+    </div>
+    <div class="kpi-card">
+      <p class="label">回收量</p>
+      <p class="value">{{ "{:,.0f}".format(kpis.get("回收量", 0)) }}</p>
+      {% if kpi_changes.recycle_pct is not none %}
+      <p class="change {{ 'up' if kpi_changes.recycle_pct > 0 else 'down' }}">
+        环比 {{ "%+.1f"|format(kpi_changes.recycle_pct) }}%
+      </p>
+      {% endif %}
+    </div>
+    <div class="kpi-card">
+      <p class="label">库存金额</p>
+      <p class="value">{{ "{:,.0f}".format(kpis.get("库存金额", 0)) }}千</p>
+    </div>
+    <div class="kpi-card {{ 'warning' if kpis.get("平均库龄", 0) > 25 else '' }}">
+      <p class="label">平均库龄</p>
+      <p class="value">{{ "%.1f"|format(kpis.get("平均库龄", 0)) }}天</p>
+    </div>
+    <div class="kpi-card">
+      <p class="label">库存数量</p>
+      <p class="value">{{ "{:,.0f}".format(kpis.get("库存数量", 0)) }}</p>
+    </div>
+  </div>
+
+  <div class="findings">
+    <h3>核心发现</h3>
+    <ol>
+      {% for finding in analysis.key_findings %}
+      <li>{{ finding }}</li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endif %}
+
+{% if "revenue" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.revenue }}、收入分析</h2>
+
+  {% if charts.revenue_cost_trend %}
+  <div class="chart-container">{{ charts.revenue_cost_trend | safe }}</div>
+  {% endif %}
+
+  {% if charts.margin_trend %}
+  <div class="chart-container">{{ charts.margin_trend | safe }}</div>
+  {% endif %}
+
+  {% if charts.category_breakdown %}
+  <div class="chart-container">{{ charts.category_breakdown | safe }}</div>
+  {% endif %}
+
+  {% if charts.brand_breakdown %}
+  <div class="chart-container">{{ charts.brand_breakdown | safe }}</div>
+  {% endif %}
+
+  {% if charts.channel_pie %}
+  <div class="chart-container">{{ charts.channel_pie | safe }}</div>
+  {% endif %}
+
+  {% for finding in analysis.revenue_findings %}
+  <div class="alert-item {{ finding.severity }}">
+    <p class="alert-title">{{ finding.title }}</p>
+    <p class="alert-detail">{{ finding.detail }}</p>
+    {% if finding.data %}
+    <table class="kpi-table">
+      <thead>
+        <tr>{% for key in finding.data[0].keys() %}<th>{{ key }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+        {% for row in finding.data[:5] %}
+        <tr>
+          {% for val in row.values() %}
+          <td class="{{ 'number' if val is number else '' }}">{{ val }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if "category_margin" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.category_margin }}、品类经营分析</h2>
+
+  {% if charts.category_margin %}
+  <div class="chart-container">{{ charts.category_margin | safe }}</div>
+  {% endif %}
+
+  {% for finding in analysis.category_findings %}
+  <div class="alert-item {{ finding.severity }}">
+    <p class="alert-title">{{ finding.title }}</p>
+    <p class="alert-detail">{{ finding.detail }}</p>
+    {% if finding.data %}
+    <table class="kpi-table">
+      <thead>
+        <tr>{% for key in finding.data[0].keys() %}<th>{{ key }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+        {% for row in finding.data[:8] %}
+        <tr>
+          {% for val in row.values() %}
+          <td class="{{ 'number' if val is number else '' }}">
+            {% if val is number %}{{ "{:,.2f}".format(val) }}{% else %}{{ val }}{% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if "cost" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.cost }}、成本分析</h2>
+
+  {% if charts.cost_structure %}
+  <div class="chart-container">{{ charts.cost_structure | safe }}</div>
+  {% endif %}
+
+  {% for finding in analysis.cost_findings %}
+  <div class="alert-item {{ finding.severity }}">
+    <p class="alert-title">{{ finding.title }}</p>
+    <p class="alert-detail">{{ finding.detail }}</p>
+    {% if finding.data %}
+    <p class="drilldown-title">明细下钻：</p>
+    <table class="kpi-table">
+      <thead>
+        <tr>{% for key in finding.data[0].keys() %}<th>{{ key }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+        {% for row in finding.data[:8] %}
+        <tr>
+          {% for val in row.values() %}
+          <td class="{{ 'number' if val is number else '' }}">
+            {% if val is number %}{{ "{:,.2f}".format(val) }}{% else %}{{ val }}{% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if "pnl" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.pnl }}、管理报表损益</h2>
+
+  {% if pnl_items %}
+  <table class="kpi-table pnl-table">
+    <thead>
+      <tr>
+        <th>项目</th>
+        <th class="number">金额（元）</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in pnl_items %}
+      <tr class="pnl-row pnl-{{ item.item_group | replace(' ', '-') | lower }}">
+        <td>{{ item.item_name }}</td>
+        <td class="number">
+          {% if item.total_value is not none %}
+            {{ "{:,.2f}".format(item.total_value) }}
+          {% else %}-{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="meta-note">数据来源：管理报表（Act.），{{ pnl_period_label or "未知月份" }}</p>
+  {% else %}
+  <div class="alert-item info">
+    <p class="alert-title">暂无管报数据</p>
+    <p class="alert-detail">当前月份管理报表无实际（Act.）数据。</p>
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if "inventory" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.inventory }}、库存分析</h2>
+
+  {% if charts.inventory_aging %}
+  <div class="chart-container">{{ charts.inventory_aging | safe }}</div>
+  {% endif %}
+
+  {% if charts.inventory_turnover %}
+  <div class="chart-container">{{ charts.inventory_turnover | safe }}</div>
+  {% endif %}
+
+  {% for finding in analysis.inventory_findings %}
+  <div class="alert-item {{ finding.severity }}">
+    <p class="alert-title">{{ finding.title }}</p>
+    <p class="alert-detail">{{ finding.detail }}</p>
+    {% if finding.data %}
+    <table class="kpi-table">
+      <thead>
+        <tr>{% for key in finding.data[0].keys() %}<th>{{ key }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+        {% for row in finding.data %}
+        <tr>
+          {% for val in row.values() %}
+          <td class="{{ 'number' if val is number else '' }}">
+            {% if val is number %}{{ "{:,.2f}".format(val) }}{% else %}{{ val }}{% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if "channels" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.channels }}、渠道效率分析</h2>
+
+  {% if charts.cross_table %}
+  <div class="chart-container">{{ charts.cross_table | safe }}</div>
+  {% endif %}
+
+  {% for finding in analysis.channel_findings %}
+  <div class="alert-item {{ finding.severity }}">
+    <p class="alert-title">{{ finding.title }}</p>
+    <p class="alert-detail">{{ finding.detail }}</p>
+    {% if finding.data %}
+    <table class="kpi-table">
+      <thead>
+        <tr>{% for key in finding.data[0].keys() %}<th>{{ key }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+        {% for row in finding.data[:8] %}
+        <tr>
+          {% for val in row.values() %}
+          <td class="{{ 'number' if val is number else '' }}">
+            {% if val is number %}{{ "{:,.2f}".format(val) }}{% else %}{{ val }}{% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if "risk" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.risk }}、风险预警</h2>
+  {% set risk_items = analysis.category_findings + analysis.inventory_findings + analysis.channel_findings + analysis.cost_findings %}
+  {% for finding in risk_items if finding.severity in ["warning", "critical"] %}
+  <div class="alert-item {{ finding.severity }}">
+    <p class="alert-title">{{ finding.title }}</p>
+    <p class="alert-detail">{{ finding.detail }}</p>
+  </div>
+  {% else %}
+  <div class="alert-item info">
+    <p class="alert-title">暂无重大风险</p>
+    <p class="alert-detail">当前未识别到 critical 或 warning 级别风险项。</p>
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if "actions" in sections %}
+<section class="section">
+  <h2>{{ section_numbers.actions }}、行动建议</h2>
+  <div class="recommendations">
+    {% for rec in analysis.recommendations %}
+    <div class="rec-item">
+      <span class="priority {{ 'high' if rec.priority == '高' else ('medium' if rec.priority == '中' else 'low') }}">
+        {{ rec.priority }}
+      </span>
+      <span><strong>{{ rec.area }}</strong>：{{ rec.action }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+</body>
+</html>

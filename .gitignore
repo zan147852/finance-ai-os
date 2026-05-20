@@ -1,0 +1,27 @@
+# Secrets and local config
+.env
+*.env
+
+# Large/local databases
+*.db
+*.duckdb
+*.sqlite
+
+# Raw data and generated artifacts
+data/
+logs/
+outputs/
+snapshots/
+reports/
+_tmp_*.json
+
+# Python cache and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.uv-cache/
+
+# Editor/local state
+.vscode/
+.claude/

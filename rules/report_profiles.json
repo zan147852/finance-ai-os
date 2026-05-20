@@ -1,0 +1,33 @@
+{
+  "profiles": {
+    "ceo": {
+      "name": "CEO全局版",
+      "description": "聚焦全局KPI和核心风险",
+      "sections": ["summary", "revenue", "cost", "pnl", "risk", "actions"],
+      "focus_dimensions": ["全局"],
+      "kpis": ["销售收入", "毛利率", "回收量", "库存金额"]
+    },
+    "category_manager": {
+      "name": "品类经理版",
+      "description": "品类维度深度分析",
+      "sections": ["summary", "category_margin", "inventory", "actions"],
+      "focus_dimensions": ["品类"],
+      "kpis": ["品类回收金额", "品类毛利率", "品类库存金额"]
+    },
+    "channel_manager": {
+      "name": "渠道经理版",
+      "description": "渠道效率和转化分析",
+      "sections": ["summary", "revenue", "channels", "inventory", "actions"],
+      "focus_dimensions": ["渠道"],
+      "kpis": ["渠道销售收入", "渠道毛利率", "转化率"]
+    },
+    "full": {
+      "name": "完整版",
+      "description": "全量分析，所有板块",
+      "sections": ["summary", "revenue", "category_margin", "cost", "pnl", "inventory", "channels", "risk", "actions"],
+      "focus_dimensions": ["全局", "品类", "品牌", "渠道"],
+      "kpis": ["销售收入", "毛利率", "回收量", "库存金额", "平均库龄", "库存数量"]
+    }
+  },
+  "default_profile": "full"
+}

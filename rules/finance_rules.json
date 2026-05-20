@@ -1,0 +1,58 @@
+{
+  "rules": [
+    {
+      "name": "low_margin_alert",
+      "description": "毛利率低于阈值预警",
+      "metric": "毛利率",
+      "condition": "lt",
+      "threshold": 5.0,
+      "severity": "warning",
+      "message": "毛利率 {value:.1f}% 低于阈值 {threshold}%"
+    },
+    {
+      "name": "negative_profit",
+      "description": "毛利为负，亏损预警",
+      "metric": "毛利",
+      "condition": "lt",
+      "threshold": 0,
+      "severity": "critical",
+      "message": "出现亏损：毛利={value}"
+    },
+    {
+      "name": "high_inventory_aging",
+      "description": "库龄超过60天的库存占比过高",
+      "metric": "平均库龄",
+      "condition": "gt",
+      "threshold": 45,
+      "severity": "warning",
+      "message": "平均库龄 {value:.1f} 天，超过阈值 {threshold} 天"
+    },
+    {
+      "name": "inventory_turnover_slow",
+      "description": "库存周转天数过长",
+      "metric": "库存周转天数",
+      "condition": "gt",
+      "threshold": 30,
+      "severity": "warning",
+      "message": "库存周转天数 {value:.0f} 天，超过阈值 {threshold} 天"
+    },
+    {
+      "name": "sales_cost_ratio",
+      "description": "销售成本占销售额比例异常",
+      "metric": "销售成本占比",
+      "condition": "gt",
+      "threshold": 95.0,
+      "severity": "warning",
+      "message": "成本占比 {value:.1f}%，接近零利润"
+    },
+    {
+      "name": "low_recycle_volume",
+      "description": "月回收量过低",
+      "metric": "回收量",
+      "condition": "lt",
+      "threshold": 100,
+      "severity": "info",
+      "message": "月回收量 {value:.0f} 单，低于阈值 {threshold}"
+    }
+  ]
+}
